@@ -29,7 +29,9 @@ pub enum DataType {
     None,
 }
 
-fn trim_quotes(input: &str) -> &str{
+// removes quotes or brackets and quotes, follows a strict rule from .snbt files in FTB Quest
+// compatibility with other versions of the FTB Quest mod is not guaranteed
+fn trim_quotes(input: &str) -> &str{ 
 
     let trimmed = input.trim();
 
@@ -45,12 +47,14 @@ fn trim_quotes(input: &str) -> &str{
 
 }
 
+// Converts the ID from hexadecimal to u64 for convenient use within the program
 fn id_converter(input: &str) -> u64{
     u64::from_str_radix(input,16).unwrap()
 }
 
 
-
+// Parses the string in parts for convenient assembly in the future
+// SnbtParseMode::Split is in development; examples of why this is needed exist in ATM10
 pub fn parse_snbt(mode: SnbtParseMode, data: String) -> Vec<(GroupType, u64, DataType, String)>{
 
     let mut out = Vec::new();
@@ -66,8 +70,10 @@ pub fn parse_snbt(mode: SnbtParseMode, data: String) -> Vec<(GroupType, u64, Dat
 
         }
 
+        // Currently the main method of operation
         SnbtParseMode::Unified => {
 
+            // Iterator over lines, .skip(1) is used because the first line in .snbt is "{"
             let mut lines = data.lines().skip(1);
 
             while let Some(line) = lines.next(){
@@ -100,6 +106,9 @@ pub fn parse_snbt(mode: SnbtParseMode, data: String) -> Vec<(GroupType, u64, Dat
 
                 let mut desc: String;
 
+                // Description can be written in two formats: single-line and multi-line
+                // To prevent the loop from running indefinitely when encountering a multi-line structure
+                // The algorithm branches based on the situation (single-line vs multi-line)
                 if type_converted == DataType::Description {
 
                     if !data_inbound.contains("]"){
@@ -111,7 +120,7 @@ pub fn parse_snbt(mode: SnbtParseMode, data: String) -> Vec<(GroupType, u64, Dat
                             if buf_line.trim().len() > 1{
 
                                 desc.push_str(trim_quotes(buf_line));
-                                desc.push('\n');
+                                desc.push('\n'); // This is necessary to prevent multi-line structures from being merged into a single line
 
                             }
 
@@ -124,6 +133,7 @@ pub fn parse_snbt(mode: SnbtParseMode, data: String) -> Vec<(GroupType, u64, Dat
 
                     }
                     else {
+                        
                         desc = trim_quotes(data_inbound).to_string();
 
                     }
@@ -133,10 +143,8 @@ pub fn parse_snbt(mode: SnbtParseMode, data: String) -> Vec<(GroupType, u64, Dat
                     desc = trim_quotes(data_inbound).to_string();
 
                 }
-
                 
-                println!("{} - {}",id_hex_string,desc);
-                
+                //store data in (group, id, type, text)
                 out.push((
                     group_converted,
                     id_converter(id_hex_string),
