@@ -10,7 +10,7 @@ pub enum SnbtParseMode{
     Split,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone, Copy)]
 pub enum GroupType {
     Chapter,
     ChapterGroup,
@@ -133,7 +133,7 @@ pub fn parse_snbt(mode: SnbtParseMode, data: String) -> Vec<(GroupType, u64, Dat
 
                     }
                     else {
-                        
+
                         desc = trim_quotes(data_inbound).to_string();
 
                     }
