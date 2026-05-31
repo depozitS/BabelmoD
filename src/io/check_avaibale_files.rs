@@ -8,6 +8,8 @@ struct TableLocalizableFiles{
     //TODO: add another typed  e.g. mods or kube js
 }
 
+
+///sketches for the future
 pub fn get_localizable_files_stats(core_path: &Path, version: Option<GameVersion> ) -> TableLocalizableFiles{
 
     let version = version.unwrap_or(GameVersion::V1_21_1);

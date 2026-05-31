@@ -6,6 +6,17 @@ pub enum FieldType{
     Description,
 }
 
+impl FieldType {
+    pub fn get_field(data: &str) -> Self{
+        match data {
+            "subtitle" => FieldType::Subtitle,
+            "quest_desc" => FieldType::Description,
+            _ => FieldType::Title
+        }
+
+    }
+}
+
 pub enum TranslatableFlag{
     Translable,
     Skip,
