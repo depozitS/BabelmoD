@@ -22,7 +22,7 @@ impl FieldType {
 
     }
 }
-
+#[derive(Debug, PartialEq)]
 pub enum TranslatableFlag{
     Translable,
     Skip,
@@ -30,6 +30,7 @@ pub enum TranslatableFlag{
 
 /// DON'T TRY TO MODIFY THE STRUCTURES MANUALLY
 /// CORRECT WORK IS GUARANTEED ONLY BY USING `.new()` AND `.update()`
+#[derive(Debug,PartialEq)]
 pub struct QuestData{
 
     pub id: u64,

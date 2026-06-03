@@ -5,7 +5,7 @@ use indexmap::IndexMap;
 
 use crate::core::{models::{FieldType, QuestData}, parser::ParserError::ParserMistake};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum ParserError{
     InvalidFormat(String),
     ParserMistake(String)
@@ -104,5 +104,117 @@ pub fn parse_data_quest(data :Vec<String>) -> Result<IndexMap<u64,QuestData>,Par
     }
 
     Ok(out)
+
+}
+
+
+
+
+
+
+//Tests
+#[cfg(test)]
+mod test{
+    use super::*;
+
+    #[test]
+    fn test_parser_1(){
+
+        let data = vec!["{".to_string(),"data.FF.title: \"hello, world\"".to_string(),"}".to_string()];
+        let out_data_struct = QuestData::new(
+            255, 
+            "data".to_string(), 
+            FieldType::Title, 
+            vec!["\"hello, world\"".to_string()]
+        );
+
+        let mut out_data: IndexMap<u64,QuestData> = IndexMap::new();
+        out_data.insert(255, out_data_struct);
+
+        assert_eq!(
+            parse_data_quest(data),
+            Ok(out_data)
+        )
+    }
+
+    #[test]
+    fn test_parser_2(){
+
+        let data = vec![
+        "{".to_string(),
+        "finish.A0F2.quest_desc: [".to_string(),
+        "\"hello blyat\"".to_string(),
+        "{@pagebraker}".to_string(),
+        "\"bye bye\"".to_string(),
+        "]".to_string(),
+        "}".to_string(),
+        ];
+
+        let expected_lines = vec![
+            "[".to_string(),
+            "\"hello blyat\"".to_string(),
+            "{@pagebraker}".to_string(),
+            "\"bye bye\"".to_string(),
+            "]".to_string(),
+    ];
+
+    let out_data_struct = QuestData::new(
+        41202, 
+        "finish".to_string(), 
+        FieldType::Description,
+        expected_lines
+    );
+
+    let mut out_data: IndexMap<u64, QuestData> = IndexMap::new();
+    out_data.insert(41202, out_data_struct);
+
+    assert_eq!(
+        parse_data_quest(data),
+        Ok(out_data)
+    );
+
+    }
+
+    #[test]
+    fn test_parser_3(){
+        let data = vec![
+        "{".to_string(),
+        "finish.FF032.title: \"its a title bro\"".to_string(),
+        "finish.FF032.quest_desc: [".to_string(),
+        "\"hello blyat\"".to_string(),
+        "{@pagebraker}".to_string(),
+        "\"bye bye\"".to_string(),
+        "]".to_string(),
+        "}".to_string(),
+        ];
+
+
+        let mut out_data_struct = QuestData::new(
+            1044530, 
+            "finish".to_string(), 
+            FieldType::Title, 
+            vec!["\"its a title bro\"".to_string()],
+        );
+    
+        out_data_struct.update(
+            FieldType::Description,
+            vec![
+                "[".to_string(),
+                "\"hello blyat\"".to_string(),
+                "{@pagebraker}".to_string(),
+                "\"bye bye\"".to_string(),
+                "]".to_string(),
+                ]
+            );
+        
+        let mut out_data: IndexMap<u64, QuestData> = IndexMap::new();
+        out_data.insert(1044530, out_data_struct);
+
+        assert_eq!(
+            parse_data_quest(data),
+            Ok(out_data),
+        );
+    }
+
 
 }
