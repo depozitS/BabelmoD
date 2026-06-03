@@ -115,6 +115,7 @@ pub fn parse_data_quest(data :Vec<String>) -> Result<IndexMap<u64,QuestData>,Par
 //Tests
 #[cfg(test)]
 mod test{
+
     use super::*;
 
     #[test]
@@ -216,5 +217,80 @@ mod test{
         );
     }
 
+    #[test]
+    fn parser_test_empty_input(){
+        assert_eq!(
+            parse_data_quest(vec![]),
+            Err(ParserError::InvalidFormat("file is empty!".to_string()))
+        )
+    }
+
+    #[test]
+    fn parser_test_invalid_format(){
+    
+        let data_wrong = vec!["dataFF.title: \"hello, world\"".to_string(),"}".to_string()];
+        let data2_wrong = vec!["{".to_string(), "dataFF.title: \"hello, world\"".to_string()];
+        let data3_wrong= vec!["[".to_string(), "dataFF.title: \"hello, world\"".to_string(),"}".to_string()];
+
+        assert_eq!(parse_data_quest(data3_wrong),parse_data_quest(data2_wrong.clone()));
+        assert_eq!(parse_data_quest(data_wrong),parse_data_quest(data2_wrong.clone()));
+
+        assert_eq!(
+            parse_data_quest(data2_wrong),
+            Err(ParserError::InvalidFormat("This is a file that doesn't contain any curly braces { or }. I have no idea what kind of file it is.".to_string()))
+        )
+    }
+
+    #[test]
+    fn parser_test_didnt_found_delimeter(){
+        let data1_wrong= vec!["{".to_string(), "dataFF.title: \"hello, world\"".to_string(),"}".to_string()];
+        let data2_wrong= vec!["{".to_string(), "data.FF.title \"hello, world\"".to_string(),"}".to_string()];
+
+        assert_eq!(
+            parse_data_quest(data1_wrong),
+            Err(ParserError::ParserMistake("didnt found delimeter . in dataFF.title: \"hello, world\"".to_string()))
+        );
+
+        assert_eq!(
+            parse_data_quest(data2_wrong),
+            Err(ParserError::ParserMistake("didnt found delimeter : in data.FF.title \"hello, world\"".to_string()))
+        );
+    }
+
+    #[test]
+    fn parser_test_invalid_hex(){
+
+        let data = vec!["{".to_string(),"data.FX.title: \"hello, world\"".to_string(),"}".to_string()];
+
+        assert_eq!(
+            parse_data_quest(data),
+            Err(ParserError::ParserMistake("failed to parse hex ID: invalid digit found in string".to_string())),
+        )
+    }
+
+    #[test]
+    fn parser_test_array_followed_by_field() {
+        let data = vec![
+            "{".to_string(),
+            "finish.A0F2.quest_desc: [".to_string(),
+            "\"line 1\"".to_string(),
+            "]".to_string(),
+            "finish.A0F2.title: \"back to normal\"".to_string(),
+            "}".to_string(),
+        ];
+
+        let mut expected_quest = QuestData::new(
+            41202,
+            "finish".to_string(),
+            FieldType::Description,
+            vec!["[".to_string(), "\"line 1\"".to_string(), "]".to_string()],
+        );
+        expected_quest.update(FieldType::Title, vec!["\"back to normal\"".to_string()]);
+
+        let mut expected_map = IndexMap::new();
+        expected_map.insert(41202, expected_quest);
+
+        assert_eq!(parse_data_quest(data), Ok(expected_map));
+    }
 
 }
