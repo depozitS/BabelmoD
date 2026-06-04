@@ -17,13 +17,11 @@ fn main() {
     let b = parse_data_quest(a.expect("msg"));
     let c: Vec<QuestData> = b.unwrap().into_values().collect();
 
-    let mut counter = 0;
+    let mut out_data:Vec<String> = Vec::new();
     for i in c{
-        counter+=i.lines_count();
+        //out_data.extend(i.process_dataset().iter().map(|d| d.clone()));
+        out_data.append(&mut i.process_dataset());
     }
-
-
-    println!("success parsed lines: {}, original lines : {}",counter, d.unwrap().len()-2);
     
 
 }

@@ -28,7 +28,7 @@ pub enum TranslatableFlag{
     Skip,
 }
 
-/// DON'T TRY TO MODIFY THE STRUCTURES MANUALLY
+/// STRUCTURES ARE DESIGNED TO BE USED WITH THE PARSER, AND THEY CAN BE INCONSISTENT IF YOU TRY TO MODIFY THEM MANUALLY
 /// CORRECT WORK IS GUARANTEED ONLY BY USING `.new()` AND `.update()`
 #[derive(Debug,PartialEq)]
 pub struct QuestData{
@@ -88,6 +88,25 @@ impl QuestData{
         for i in input{
             out.push((i, TranslatableFlag::Translable));
         }
+
+        out
+    }
+
+    pub fn process_dataset(&self) -> Vec<String>{
+        let mut out:Vec<String> = Vec::new();
+        
+        let mut processed_data = |type_data: &str, data: &[(String, TranslatableFlag)]|{
+            if let Some((head,tail)) = data.split_first(){
+                out.push(format!("\t{}.{:016X}.{}: {}",self.group, self.id, type_data, head.0));
+                out.extend(tail.iter().map(|d| d.0.clone()));
+            }
+        };   
+
+        processed_data("quest_desc",&self.description);
+        processed_data("quest_subtitle",&self.quest_subtitle);
+        processed_data("chapter_subtitle",&self.chapter_subtitle);
+        processed_data("title",&self.title);
+
 
         out
     }
