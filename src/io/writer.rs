@@ -4,7 +4,7 @@ use crate::core::models::QuestData;
 
 
 
-pub fn quest_writer(core_path: &Path, added_path: &Path, data: Vec<QuestData>) /*->Reslut*/{
+pub fn quest_writer(core_path: &Path, added_path: &Path, data: Vec<String>) /*->Reslut*/{
 
     let out_path = core_path.join(added_path);
 
@@ -12,8 +12,8 @@ pub fn quest_writer(core_path: &Path, added_path: &Path, data: Vec<QuestData>) /
     builded_out_string.push_str("{\n");
 
     for i in data{
-        builded_out_string.push_str(i.assemble().trim());
-        builded_out_string.push_str("\n");
+        builded_out_string.push_str(&i);
+        builded_out_string.push('\n');
     }
 
     builded_out_string.push_str("}\n");

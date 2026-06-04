@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use crate::{core::{models::QuestData, parser::parse_data_quest}, io::reader::{TypeRead, read_data}};
+use crate::{core::{models::QuestData, parser::parse_data_quest}, io::{reader::{TypeRead, read_data}, writer::quest_writer}};
 
 mod io;
 mod core;
@@ -11,6 +11,7 @@ fn main() {
 
     let core_path = Path::new("/home/Yk4m4/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances/All the Mods 10 - ATM10/minecraft/");
     let added_path = Path::new("config/ftbquests/quests/lang/en_us.snbt");
+    let added_path2 = Path::new("config/ftbquests/quests/lang/xd.snbt");
 
     let a = read_data(core_path, added_path, TypeRead::FTBquest);
     let d = read_data(core_path, added_path, TypeRead::FTBquest);
@@ -23,5 +24,6 @@ fn main() {
         out_data.append(&mut i.process_dataset());
     }
     
+    quest_writer(core_path,added_path2,out_data);
 
 }
