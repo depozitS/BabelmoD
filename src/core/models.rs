@@ -97,8 +97,8 @@ impl QuestData{
         
         let mut processed_data = |type_data: &str, data: &[(String, TranslatableFlag)]|{
             if let Some((head,tail)) = data.split_first(){
-                out.push(format!("\t{}.{:016X}.{}: {}",self.group, self.id, type_data, head.0));
-                out.extend(tail.iter().map(|d| d.0.clone()));
+                out.push(format!("{}.{:016X}.{}: {}",self.group, self.id, type_data, head.0));
+                out.extend(tail.iter().map(|d| format!("\t{}",d.0.clone().trim())));
             }
         };   
 
