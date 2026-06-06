@@ -1,13 +1,11 @@
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::fs::read_to_string;
 use std::io;
 
+use crate::io::check_avaibale_files::TypeRead;
 
-pub enum TypeRead{
-    Modification,
-    FTBquest,
-}
+
 
 
 
@@ -35,4 +33,16 @@ pub fn read_data(core_path: &Path, added_path: &Path, type_read_flag: TypeRead) 
         //placeholder
         _ => todo!("Implement reading for mod variant"),
     }
+}
+
+
+
+
+#[cfg(test)]
+
+mod test{
+    use super::*;
+
+
+
 }

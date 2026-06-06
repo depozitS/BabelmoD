@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use crate::{core::{models::QuestData, parser::parse_data_quest}, io::{reader::{TypeRead, read_data}, writer::quest_writer}};
+use crate::{core::{models::QuestData, parser::parse_data_quest}, io::{check_avaibale_files::{self, TypeRead, find_localizable_files}, reader::read_data, writer::quest_writer}};
 
 mod io;
 mod core;
@@ -9,21 +9,24 @@ mod core;
 fn main() {
 
 
-    let core_path = Path::new("/home/Yk4m4/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances/All the Mods 10 - ATM10/minecraft/");
-    let added_path = Path::new("config/ftbquests/quests/lang/en_us.snbt");
-    let added_path2 = Path::new("config/ftbquests/quests/lang/xd.snbt");
+    let core_path = Path::new("/home/Yk4m4/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances/Enigmatica 10 - E10/minecraft");
+    // let added_path = Path::new("config/ftbquests/quests/lang/en_us.snbt");
+    // let added_path2 = Path::new("config/ftbquests/quests/lang/xd.snbt");
 
-    let a = read_data(core_path, added_path, TypeRead::FTBquest);
-    let d = read_data(core_path, added_path, TypeRead::FTBquest);
-    let b = parse_data_quest(a.expect("msg"));
-    let c: Vec<QuestData> = b.unwrap().into_values().collect();
+    // let a = read_data(core_path, added_path, TypeRead::FTBquest);
+    // let d = read_data(core_path, added_path, TypeRead::FTBquest);
+    // let b = parse_data_quest(a.expect("msg"));
+    // let c: Vec<QuestData> = b.unwrap().into_values().collect();
 
-    let mut out_data:Vec<String> = Vec::new();
-    for i in c{
-        //out_data.extend(i.process_dataset().iter().map(|d| d.clone()));
-        out_data.append(&mut i.process_dataset());
-    }
+    // let mut out_data:Vec<String> = Vec::new();
+    // for i in c{
+    //     //out_data.extend(i.process_dataset().iter().map(|d| d.clone()));
+    //     out_data.append(&mut i.process_dataset());
+    // }
     
-    quest_writer(core_path,added_path2,out_data);
+    // quest_writer(core_path,added_path2,out_data);
+    let a = find_localizable_files(core_path);
+    let b = a.get_paths()[0].0.clone();
+    println!("{}  :  {}",b.to_str().expect("dsa"), a.len())
 
 }
