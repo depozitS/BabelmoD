@@ -79,12 +79,12 @@ fn read_mod(path: &Path) -> Result<Vec<String>,ReadError>{
     Err(ReadError::WithoutTranslatebleString)
 }
 
-enum TypeFile {
+pub enum TypeFile {
     File,
     Dir,
 }
 
-enum ExtensionFile{
+pub enum ExtensionFile{
     Json,
     Jar,
     Snbt,
@@ -102,7 +102,7 @@ impl ExtensionFile {
     }
 }
 
-fn validate_path(target_path: &Path, type_file: TypeFile, ext_file: ExtensionFile) -> bool{
+pub fn validate_path(target_path: &Path, type_file: TypeFile, ext_file: ExtensionFile) -> bool{
 
     let match_type_file = match type_file {
         TypeFile::File => target_path.is_file(),

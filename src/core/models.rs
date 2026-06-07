@@ -81,7 +81,7 @@ impl QuestData{
 
     /// Internal function for marking lines as translatable
     fn validate_data(input: Vec<String>) -> Vec<(String,TranslatableFlag)> {
-        //todo!("realize validate_data");
+        todo!("realize validate_data");
 
         let mut out = Vec::new();
 
