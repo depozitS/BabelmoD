@@ -26,7 +26,8 @@ fn main() {
     
     // quest_writer(core_path,added_path2,out_data);
     let a = find_localizable_files(core_path);
-    let b = a.get_paths()[0].0.clone();
-    println!("{}  :  {}",b.to_str().expect("dsa"), a.len())
+    for i in a.get_paths().into_iter(){
+        println!("{}",i.0.display());
+    }
 
 }

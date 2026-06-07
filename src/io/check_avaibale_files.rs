@@ -1,5 +1,7 @@
 use std::{fs, path::{Path, PathBuf}};
 
+use crate::io::reader::mod_has_translatable_files;
+
 
 #[derive(Clone, Copy)]
 pub enum TypeRead{
@@ -51,6 +53,7 @@ pub fn find_localizable_files(core_path: &Path) -> PathManager{
     find_quest_files(core_path, &mut reader_paths);
 
     //mods search
+    find_mods_files(core_path, &mut reader_paths);
 
     reader_paths
 }
@@ -65,10 +68,23 @@ fn find_quest_files(core_path: &Path, reader_paths: &mut PathManager){
 
 }
 
-fn find_mods_files(){
-    todo!("iter mods")
+fn find_mods_files(core_path: &Path, reader_paths: &mut PathManager){
+    
+    let mod_path = Path::new("mods/");
+    let full_path = core_path.join(mod_path);
+
+    if let Ok(files) = fs::read_dir(full_path){
+        for file in files.flatten(){
+            let file_path = file.path();
+            if mod_has_translatable_files(&file_path){
+                reader_paths.add_path(
+                    &file_path.strip_prefix(core_path).unwrap(),
+                    TypeRead::Modification
+                );
+            }
+        }
+    } 
 }
 
-fn mod_has_translatable_files(){
-    todo!("iter files into mod to find en_us.json")
-}
+
+
