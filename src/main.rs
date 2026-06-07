@@ -9,5 +9,5 @@ mod cli;
 fn main() {
 
     controller();
-
-}
+    std::process::exit(0);
+}   
