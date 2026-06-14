@@ -1,13 +1,12 @@
-
-use crate::cli::test_programm_controller::controller;
-
+mod error_handler;
 mod io;
-mod core;
-mod cli;
+mod models;
 
+use crate::io::readers::read_original_data;
+use crate::error_handler::backend_error_handler::AppError;
+use crate::models::io_models;
 
 fn main() {
 
-    controller();
-    std::process::exit(0);
+
 }   
