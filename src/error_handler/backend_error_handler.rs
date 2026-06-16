@@ -1,7 +1,8 @@
 
 #[derive(Debug)]
 pub enum AppError{
-    IOError(IOError)
+    IOError(IOError),
+    ParsedError(ParserError)
 }
 
 #[derive(Debug)]
@@ -24,7 +25,12 @@ pub enum ReadError{
     FileCantRead(String),
 }
 
-
+#[derive(Debug)]
+pub enum ParserError {
+    DataEmpty(String),
+    DataInvalid(String),
+    LogicError(String)
+}
 
 
 
@@ -46,6 +52,12 @@ impl From<ReadError> for IOError{
     }
 }
 
+impl From<ParserError> for AppError{
+    fn from(value: ParserError) -> Self{
+        AppError::ParsedError(value)
+    }
+}
+
 impl AppError{
     pub fn code(&self)->u16{
         match self {
@@ -58,6 +70,11 @@ impl AppError{
 
             //read errors code 12xx
             AppError::IOError(IOError::ReadError(ReadError::FileCantRead(_))) => 1201,
+
+            //parser errors code 13xx
+            AppError::ParsedError(ParserError::LogicError(_)) => 1301,
+            AppError::ParsedError(ParserError::DataEmpty(_)) => 1302,
+            AppError::ParsedError(ParserError::DataInvalid(_)) => 1303,
 
         }
     }
@@ -80,7 +97,15 @@ impl AppError{
 
             //read errors code 12xx
             AppError::IOError(IOError::ReadError(ReadError::FileCantRead(s))) =>
-                format!("file cant be read: {}", s)
+                format!("file cant be read: {}", s),
+
+            //parser errors code 13xx
+            AppError::ParsedError(ParserError::LogicError(s)) =>
+                format!("internal error, please write Issue: {}", s),
+            AppError::ParsedError(ParserError::DataEmpty(s)) =>
+                format!("the read file does not contain valid data: {}", s),
+            AppError::ParsedError(ParserError::DataInvalid(s)) =>
+                format!("file contains invalid data. If you are sure of your input, please create an issue: {}",s)
 
         }
     }

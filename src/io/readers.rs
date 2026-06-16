@@ -1,6 +1,5 @@
 use std::fs;
 use std::path::Path;
-use std::string::ParseError;
 
 use crate::error_handler::backend_error_handler::{AppError, IOError, PathError, ReadError};
 use crate::models::io_models::{ExtensionFile, FlagRead, TypeFile};
