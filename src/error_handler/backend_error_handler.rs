@@ -1,15 +1,17 @@
 
-
+#[derive(Debug)]
 pub enum AppError{
     IOError(IOError)
 }
 
+#[derive(Debug)]
 pub enum IOError{
     PathError(PathError),
     ReadError(ReadError)
 
 }
 
+#[derive(Debug)]
 pub enum PathError{
     InvalidPath(String),        //path not endend by minecraft or not containded config or mods
     PathNotAbsolute(String),    //
@@ -17,6 +19,7 @@ pub enum PathError{
     PathMissmatch(String)       //realized by validate, for usual its error by programm, not by user
 }
 
+#[derive(Debug)]
 pub enum ReadError{
     FileCantRead(String),
 }
