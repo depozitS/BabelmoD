@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 mod error_handler;
 mod io;
 mod models;
@@ -10,4 +11,18 @@ use crate::models::io_models::{self, FlagRead};
 
 fn main() {
 
+=======
+
+use crate::cli::test_programm_controller::controller;
+
+mod io;
+mod core;
+mod cli;
+
+
+fn main() {
+
+    controller();
+    std::process::exit(0);
+>>>>>>> main
 }   
