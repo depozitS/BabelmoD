@@ -1,10 +1,10 @@
 use std::fs;
 use std::path::Path;
 
-use crate::error_handler::backend_error_handler::{AppError, IOError, PathError, ReadError};
+use crate::error_handler::backend_error_handler::{AppError, IOError, ReadError};
 
 
-fn read_regular_file(path: &Path) -> Result<String,AppError>{
+pub fn read_regular_file(path: &Path) -> Result<String,AppError>{
     fs::read_to_string(path)
         .map_err(|e| 
             AppError::IOError(

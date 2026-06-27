@@ -1,8 +1,8 @@
 
 #[derive(PartialEq, Debug)]
 pub struct ParsedData<'a>{
-    key: &'a str,
-    value: Vec<ValuePart<'a>>,
+    pub key: &'a str,
+    pub value: Vec<ValuePart<'a>>,
 }
 
 #[derive(PartialEq, Debug)]
@@ -35,3 +35,4 @@ mod test{
         assert_eq!(d.value, vec![ValuePart::Translatable(b), ValuePart::NewLine])
     }
 }
+

@@ -34,6 +34,8 @@ pub enum ParserError {
 
 
 
+
+
 impl From<IOError> for AppError{
     fn from(value: IOError) -> Self{
         AppError::IOError(value)
