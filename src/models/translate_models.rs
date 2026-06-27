@@ -76,26 +76,44 @@ impl ParsedValue{
 }
 
 impl ProjectPart {
-    pub fn new(path: PathBuf, path_in_archive: Option<PathBuf>, orig_data: String, orig_slices: Vec<ParsedValue>) -> Self{
-        Self { 
+    pub fn new(path: PathBuf, path_in_archive: Option<PathBuf>, orig_data: String, orig_slices: Vec<ParsedValue>) -> Result<Self, AppError>{
+
+        let mut out = Self { 
             file_path: path, 
             file_path_in_archive: path_in_archive, 
             original_data: orig_data, 
             parsed_data: orig_slices, 
             translatable_data: String::new(), 
             translatable_slice: Vec::new(), 
-        }
+        };
+
+        out.add_keys_to_translatable()?;
+
+        Ok(out)
+
     }
 
 
-    fn add_keys_to_translatable(&mut self){
+    fn add_keys_to_translatable(&mut self) -> Result<(), AppError>{
         for i in &self.parsed_data{
 
-            todo!("ADD VALIDATE SLICE BY INDEX AND KEY WORDS");
-
+            if i.key.end > self.original_data.len(){
+                return Err(AppError::ParsedError(ParserError::LogicError("slice out of bounds".to_string())));
+            }
 
             let slice = &self.original_data[i.key];
             
+            if !slice.contains('.') ||
+                slice.contains('"') || 
+                slice.contains('\n')
+            {
+                return Err(AppError::ParsedError(ParserError::LogicError(
+                    format!(
+                        "after parsing data have wrong format: {}", slice
+                    )
+                )));
+            }
+
             let start = self.translatable_data.len();
             self.translatable_data.push_str(slice);
             let end = self.translatable_data.len();
@@ -107,6 +125,8 @@ impl ProjectPart {
                     value: Vec::new() }
             );
         }
+
+        Ok(())
 
     }
 }
