@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 indexmap = "2"
 zip = "8"
+sqlx = {version = "0.9", features = ["runtime-tokio", "sqlite"] }

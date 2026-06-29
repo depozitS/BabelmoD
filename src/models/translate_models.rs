@@ -1,7 +1,5 @@
 use std::{ops::Index, path::PathBuf};
 
-use indexmap::map::Slice;
-
 use crate::error_handler::backend_error_handler::{AppError, ParserError};
 
 #[derive(Clone,Copy)]
@@ -129,4 +127,5 @@ impl ProjectPart {
         Ok(())
 
     }
+    
 }
